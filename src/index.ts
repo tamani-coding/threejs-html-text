@@ -122,12 +122,17 @@ const clock = new THREE.Clock();
 let gameLoop = () => {
     // MOVE TEXT
     if (model) {
+        const time = Date.now() * 0.0005;
+        model.position.x = Math.sin(time * 0.75) * 2;
+        model.position.z = Math.cos(time * 0.75) * 2;
+
         // MOVE TO THE RIGHT OF THE CAMERA
         boxPositionOffset.copy(model.position);
         boxPositionOffset.sub(camera.position);
         boxPositionOffset.normalize();
         boxPositionOffset.applyAxisAngle(Y_AXIS, - Math.PI / 2);
-        boxPositionOffset.y = 1;
+        boxPositionOffset.multiplyScalar(0.5);
+        boxPositionOffset.y = 1.5;
 
         boxPosition.setFromMatrixPosition( model.matrixWorld )
         boxPosition.add(boxPositionOffset);
