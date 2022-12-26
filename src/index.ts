@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // SCENE
 const scene = new THREE.Scene();
@@ -9,9 +9,9 @@ scene.background = new THREE.Color(0xa8def0);
 // CAMERA
 const camera = new THREE.PerspectiveCamera(45, 
         window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.y = 5;
-camera.position.z = 15;
-camera.position.x = 15;
+camera.position.y = 2;
+camera.position.z = -5;
+camera.position.x = 5;
 
 // RENDERER
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -60,16 +60,24 @@ plane.rotation.x = - Math.PI / 2
 plane.receiveShadow = true
 scene.add(plane);
 
-// CYLINDER
-const agentHeight = 1.0;
-const agentRadius = 0.25;
-const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(agentRadius, agentRadius, 
-    agentHeight), 
-    new THREE.MeshPhongMaterial({ color: 0x1e81b0}));
-cylinder.castShadow = true;
-cylinder.receiveShadow = true;
-cylinder.position.y = agentHeight / 2;
-scene.add(cylinder);
+let model: THREE.Group;
+let mixer: THREE.AnimationMixer;
+new GLTFLoader().load('/glb/Soldier.glb', function (gltf: GLTF) {
+    model = gltf.scene;
+    model.traverse(function (object: any) {
+        if (object.isMesh) 
+            object.castShadow = true;
+    });
+    scene.add(model);
+
+    const gltfAnimations: THREE.AnimationClip[] = gltf.animations;
+    mixer = new THREE.AnimationMixer(model);
+    const animationsMap: Map<string, THREE.AnimationAction> = new Map()
+    gltfAnimations.filter(a => a.name != 'TPose').forEach((a: THREE.AnimationClip) => {
+        animationsMap.set(a.name, mixer.clipAction(a))
+    })
+    animationsMap.get('Idle').play();
+});
 
 // RESIZE HANDLER
 function onWindowResize() {
@@ -91,23 +99,19 @@ let vector = new THREE.Vector3();
 // GAMELOOP
 const clock = new THREE.Clock();
 let gameLoop = () => {
-
-    // MOVE OBJECT
-    const time = Date.now() * 0.0005;
-    cylinder.position.x = Math.sin(time * 0.7) * 10;
-    cylinder.position.z = Math.cos(time * 0.7) * 10;
-
     // MOVE TEXT
-    vector.setFromMatrixPosition( cylinder.matrixWorld )
-    vector.project(camera);
-    
-    var widthHalf = canvas.width / 2, heightHalf = canvas.height / 2;
-    vector.x = ( vector.x * widthHalf ) + widthHalf;
-    vector.y = - ( vector.y * heightHalf ) + heightHalf;
-    
-    followText.style.top = `${vector.y}px`;
-    followText.style.left = `${vector.x}px`;
-    
+    if (model) {
+        vector.setFromMatrixPosition( model.matrixWorld )
+        vector.project(camera);
+        
+        var widthHalf = canvas.width / 2, heightHalf = canvas.height / 2;
+        vector.x = ( vector.x * widthHalf ) + widthHalf;
+        vector.y = - ( vector.y * heightHalf ) + heightHalf;
+        
+        followText.style.top = `${vector.y}px`;
+        followText.style.left = `${vector.x}px`;
+    }
+    if (mixer) mixer.update(clock.getDelta());
     orbitControls.update()
     renderer.render(scene, camera);
     requestAnimationFrame(gameLoop);
