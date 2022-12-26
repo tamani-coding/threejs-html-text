@@ -13,23 +13,48 @@
     .follow-box {
       position: absolute;
       z-index: 100;
-      padding: 1rem;
       border: 2px solid black;
-      /* border-radius: 30px; */
       background: #FCF0CC;
       font-family: Arial;
       font-weight: bold;
       font-size: 1rem;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+
+    .follow-box-headline {
+      border-bottom: 2px solid black;
+      padding-top: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .follow-box-row {
+      padding-top: 0.5rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-bottom: 0.5rem;
     }
   </style>
 </head>
 
 <body>
   <div id="follow-text" class="follow-box">
-    ★★ I am text box. ★★
+    <div class="follow-box-headline">
+      ★★ Knight Lv. 11 ★★
+    </div>
+    <class class="follow-box-row">
+      ❤ Hitpoints: 100
+    </class>
+    <class class="follow-box-row">
+      ☯ Wisdom: 7
+    </class>
+    <class class="follow-box-row">
+      ♟ Intelligence: 3
+    </class>
   </div>
   <script src="index.js"></script>
 </body>

@@ -71,16 +71,6 @@ cylinder.receiveShadow = true;
 cylinder.position.y = agentHeight / 2;
 scene.add(cylinder);
 
-// CONE
-const cone = new THREE.Mesh(new THREE.ConeGeometry(0.5, 2, 32), 
-    new THREE.MeshPhongMaterial({ color: 0x21130d}));
-cone.castShadow = true;
-cone.receiveShadow = true;
-cone.position.y = 1 / 2;
-cone.position.x = -2;
-cone.position.z = 5;
-scene.add(cone);
-
 // RESIZE HANDLER
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -88,6 +78,11 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 window.addEventListener('resize', onWindowResize);
+
+const panelPos = new THREE.Vector3();
+panelPos.y = 1;
+panelPos.x = -2;
+panelPos.z = 5;
 
 const canvas = document.querySelector('canvas');
 const followText = document.getElementById('follow-text');
