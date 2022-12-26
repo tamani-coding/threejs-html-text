@@ -54,9 +54,27 @@ scene.add(aLight);
 // ATTACH RENDERER
 document.body.appendChild(renderer.domElement);
 
+function wrapAndRepeatTexture (map: THREE.Texture) {
+    map.wrapS = map.wrapT = THREE.RepeatWrapping
+    map.repeat.x = map.repeat.y = 20
+}
+const textureLoader = new THREE.TextureLoader();
+const grassBaseColor = textureLoader.load("/textures/Stylized_Grass_003_basecolor.jpg");
+const grassNormal = textureLoader.load("/textures/Stylized_Grass_003_normal.jpg");
+const grassHeight = textureLoader.load("/textures/Stylized_Grass_003_height.png");
+const grassRoughness = textureLoader.load("/textures/Stylized_Grass_003_roughness.jpg");
+const grassAO = textureLoader.load("/textures/Stylized_Grass_003_ambientOcclusion.jpg");
+wrapAndRepeatTexture(grassBaseColor);
+wrapAndRepeatTexture(grassNormal);
+wrapAndRepeatTexture(grassHeight);
+wrapAndRepeatTexture(grassRoughness);
+wrapAndRepeatTexture(grassAO);
+
 // FLOOR
-const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500, 32), new THREE.MeshPhongMaterial({ color: 0xe28743}));
-plane.rotation.x = - Math.PI / 2
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 32), 
+new THREE.MeshStandardMaterial({ map: grassBaseColor, normalMap: grassNormal, 
+    displacementMap: grassHeight, displacementScale:0.01, roughnessMap: grassRoughness, aoMap: grassAO }));
+plane.rotation.x = -Math.PI / 2
 plane.receiveShadow = true
 scene.add(plane);
 
