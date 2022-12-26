@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
@@ -112,22 +113,32 @@ panelPos.z = 5;
 
 const canvas = document.querySelector('canvas');
 const followText = document.getElementById('follow-text');
-let vector = new THREE.Vector3();
+let boxPosition = new THREE.Vector3();
+let boxPositionOffset = new THREE.Vector3();
+const Y_AXIS = new Vector3(0, 1, 0);
 
 // GAMELOOP
 const clock = new THREE.Clock();
 let gameLoop = () => {
     // MOVE TEXT
     if (model) {
-        vector.setFromMatrixPosition( model.matrixWorld )
-        vector.project(camera);
+        // MOVE TO THE RIGHT OF THE CAMERA
+        boxPositionOffset.copy(model.position);
+        boxPositionOffset.sub(camera.position);
+        boxPositionOffset.normalize();
+        boxPositionOffset.applyAxisAngle(Y_AXIS, - Math.PI / 2);
+        boxPositionOffset.y = 1;
+
+        boxPosition.setFromMatrixPosition( model.matrixWorld )
+        boxPosition.add(boxPositionOffset);
+        boxPosition.project(camera);
         
         var widthHalf = canvas.width / 2, heightHalf = canvas.height / 2;
-        vector.x = ( vector.x * widthHalf ) + widthHalf;
-        vector.y = - ( vector.y * heightHalf ) + heightHalf;
+        boxPosition.x = ( boxPosition.x * widthHalf ) + widthHalf;
+        boxPosition.y = - ( boxPosition.y * heightHalf ) + heightHalf;
         
-        followText.style.top = `${vector.y}px`;
-        followText.style.left = `${vector.x}px`;
+        followText.style.top = `${boxPosition.y}px`;
+        followText.style.left = `${boxPosition.x}px`;
     }
     if (mixer) mixer.update(clock.getDelta());
     orbitControls.update()
