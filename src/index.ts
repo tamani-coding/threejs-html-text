@@ -36,6 +36,7 @@ orbitControls.update();
 // LIGHTS
 const dLight = new THREE.DirectionalLight('white', 0.8);
 dLight.position.x = 20;
+dLight.position.z = -20;
 dLight.position.y = 30;
 dLight.castShadow = true;
 dLight.shadow.mapSize.width = 4096;
@@ -59,7 +60,7 @@ plane.rotation.x = - Math.PI / 2
 plane.receiveShadow = true
 scene.add(plane);
 
-// AGENT
+// CYLINDER
 const agentHeight = 1.0;
 const agentRadius = 0.25;
 const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(agentRadius, agentRadius, 
@@ -69,6 +70,16 @@ cylinder.castShadow = true;
 cylinder.receiveShadow = true;
 cylinder.position.y = agentHeight / 2;
 scene.add(cylinder);
+
+// CONE
+const cone = new THREE.Mesh(new THREE.ConeGeometry(0.5, 2, 32), 
+    new THREE.MeshPhongMaterial({ color: 0x21130d}));
+cone.castShadow = true;
+cone.receiveShadow = true;
+cone.position.y = 1 / 2;
+cone.position.x = -2;
+cone.position.z = 5;
+scene.add(cone);
 
 // RESIZE HANDLER
 function onWindowResize() {
