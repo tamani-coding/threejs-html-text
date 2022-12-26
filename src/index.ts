@@ -49,7 +49,7 @@ dLight.shadow.camera.top = d;
 dLight.shadow.camera.bottom = - d;
 scene.add(dLight);
 
-const aLight = new THREE.AmbientLight('white', 0.5);
+const aLight = new THREE.AmbientLight('white', 0.7);
 scene.add(aLight);
 
 // ATTACH RENDERER
@@ -122,9 +122,9 @@ const clock = new THREE.Clock();
 let gameLoop = () => {
     // MOVE TEXT
     if (model) {
-        const time = Date.now() * 0.0005;
-        model.position.x = Math.sin(time * 0.75) * 2;
-        model.position.z = Math.cos(time * 0.75) * 2;
+        // const time = Date.now() * 0.0005;
+        // model.position.x = Math.sin(time * 0.75) * 2;
+        // model.position.z = Math.cos(time * 0.75) * 2;
 
         // MOVE TO THE RIGHT OF THE CAMERA
         boxPositionOffset.copy(model.position);
