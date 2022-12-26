@@ -9,9 +9,9 @@ scene.background = new THREE.Color(0xa8def0);
 // CAMERA
 const camera = new THREE.PerspectiveCamera(45, 
         window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.y = 10;
+camera.position.y = 5;
 camera.position.z = 10;
-camera.position.x = 33;
+camera.position.x = 15;
 
 // RENDERER
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -54,7 +54,7 @@ scene.add(aLight);
 document.body.appendChild(renderer.domElement);
 
 // FLOOR
-const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500, 32), new THREE.MeshPhongMaterial({ color: 0xfab74b}));
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500, 32), new THREE.MeshPhongMaterial({ color: 0xe28743}));
 plane.rotation.x = - Math.PI / 2
 plane.receiveShadow = true
 scene.add(plane);
@@ -62,15 +62,13 @@ scene.add(plane);
 // AGENT
 const agentHeight = 1.0;
 const agentRadius = 0.25;
-const agent = new THREE.Mesh(new THREE.CylinderGeometry(agentRadius, agentRadius, 
+const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(agentRadius, agentRadius, 
     agentHeight), 
-    new THREE.MeshPhongMaterial({ color: 'green'}));
-agent.castShadow = true;
-agent.receiveShadow = true;
-agent.position.y = agentHeight / 2;
-const agentGroup = new THREE.Group();
-agentGroup.add(agent);
-scene.add(agentGroup);
+    new THREE.MeshPhongMaterial({ color: 0x1e81b0}));
+cylinder.castShadow = true;
+cylinder.receiveShadow = true;
+cylinder.position.y = agentHeight / 2;
+scene.add(cylinder);
 
 // RESIZE HANDLER
 function onWindowResize() {
@@ -81,7 +79,7 @@ function onWindowResize() {
 window.addEventListener('resize', onWindowResize);
 
 const canvas = document.querySelector('canvas');
-const text1 = document.getElementById('text1');
+const followText = document.getElementById('follow-text');
 let vector = new THREE.Vector3();
 
 // GAMELOOP
@@ -90,19 +88,19 @@ let gameLoop = () => {
 
     // MOVE OBJECT
     const time = Date.now() * 0.0005;
-    agentGroup.position.x = Math.sin(time * 0.7) * 20;
-    agentGroup.position.z = Math.cos(time * 0.7) * 20;
+    cylinder.position.x = Math.sin(time * 0.7) * 10;
+    cylinder.position.z = Math.cos(time * 0.7) * 10;
 
     // MOVE TEXT
-    vector.setFromMatrixPosition( agentGroup.matrixWorld )
+    vector.setFromMatrixPosition( cylinder.matrixWorld )
     vector.project(camera);
     
     var widthHalf = canvas.width / 2, heightHalf = canvas.height / 2;
     vector.x = ( vector.x * widthHalf ) + widthHalf;
     vector.y = - ( vector.y * heightHalf ) + heightHalf;
     
-    text1.style.top = `${vector.y}px`;
-    text1.style.left = `${vector.x}px`;
+    followText.style.top = `${vector.y}px`;
+    followText.style.left = `${vector.x}px`;
     
     orbitControls.update()
     renderer.render(scene, camera);
