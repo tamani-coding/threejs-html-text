@@ -138,9 +138,10 @@ let gameLoop = () => {
         boxPosition.add(boxPositionOffset);
         boxPosition.project(camera);
         
+        var rect = canvas.getBoundingClientRect();
         var widthHalf = canvas.width / 2, heightHalf = canvas.height / 2;
-        boxPosition.x = ( boxPosition.x * widthHalf ) + widthHalf;
-        boxPosition.y = - ( boxPosition.y * heightHalf ) + heightHalf;
+        boxPosition.x = rect.left + ( boxPosition.x * widthHalf ) + widthHalf;
+        boxPosition.y = rect.top - ( boxPosition.y * heightHalf ) + heightHalf;
         
         followText.style.top = `${boxPosition.y}px`;
         followText.style.left = `${boxPosition.x}px`;
