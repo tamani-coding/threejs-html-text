@@ -106,11 +106,6 @@ function onWindowResize() {
 }
 window.addEventListener('resize', onWindowResize);
 
-const panelPos = new THREE.Vector3();
-panelPos.y = 1;
-panelPos.x = -2;
-panelPos.z = 5;
-
 const canvas = document.querySelector('canvas');
 const followText = document.getElementById('follow-text');
 let boxPosition = new THREE.Vector3();
